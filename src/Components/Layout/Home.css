@@ -1,0 +1,86 @@
+.home-container {
+  margin: 20px; /* Adds margin around the home container */
+  padding: 0 20px;
+  bottom: 0;
+  /* Adds padding to the sides of the home container */
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hero-image {
+  width: 100%; /* Image takes the full width */
+  height: 300px; /* Keeps the height proportional */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.project-title {
+  text-align: center;
+  margin-top: 10px;
+  color: #00796b;
+}
+
+.card-container {
+  display: flex; /* Changes the layout to a row */
+  justify-content: space-between; /* Distributes space between cards */
+  gap: 20px; /* Adds space between cards */
+  margin-top: 20px; /* Adds margin to the top of the card container */
+  flex-wrap: wrap; /* Ensures cards wrap if the screen size is too small */
+}
+
+.card {
+  flex: 1; /* Allows cards to expand evenly */
+  min-width: 250px; /* Ensures cards have a minimum width */
+  margin: 10px; /* Adds margin around each card */
+  padding: 20px; /* Adds padding inside each card */
+  border: 1px solid #ddd; /* Adds a light border around cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a shadow to cards */
+  border-radius: 8px; /* Rounds the corners of the cards */
+  background-color: #fff; /* Sets the background color of the cards */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card-title {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.card-content {
+  margin-bottom: 10px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+.problem-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #333333;
+}
+
+.problem-item {
+  margin-bottom: 8px;
+}
+.footer {
+  background-color: #00796b;
+  color: white;
+  text-align: center;
+  height: 40px;
+}
