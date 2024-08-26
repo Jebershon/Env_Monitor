@@ -1,10 +1,24 @@
 import React from "react";
 import "./Home.css";
 import logo from "../../Assests/ecobot.png";
+import HomeIcon from '@mui/icons-material/Home';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import Footer from "./Footer";
+import { Settings } from "@mui/icons-material";
 const Home = () => {
   return (
     <div className="home-container">
+      <div className="position">
+      <div className="nav">
+      <div className="contain">
+        <div className="Home"><HomeIcon/></div>
+        <div className="Account"><AccountBoxIcon/></div>
+        <div className="Data"><BarChartIcon/></div>
+        <div className="settings"><Settings/></div>
+      </div>
+      </div>
+      </div>
       <div className="hero-section">
         <img src={logo} alt="Project" className="hero-image" />
         <h1 className="project-title">
@@ -68,7 +82,7 @@ const Home = () => {
           </ul>
         </div>
       </div>
-      <div className="footer">
+      <div>
         <Footer />
       </div>
     </div>

@@ -2,9 +2,9 @@
   margin: 20px; /* Adds margin around the home container */
   padding: 0 20px;
   bottom: 0;
+  position: relative;
   /* Adds padding to the sides of the home container */
 }
-
 .hero-section {
   display: flex;
   flex-direction: column;
@@ -78,9 +78,30 @@
 .problem-item {
   margin-bottom: 8px;
 }
-.footer {
-  background-color: #00796b;
-  color: white;
-  text-align: center;
-  height: 40px;
+/* -------------------bottom-nav bar------------------------ */
+.position{
+  display: flex;
+  justify-content: center;
+}
+.contain{
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 40px;
+  margin: 8px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.nav{
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  bottom: 80px;
+  z-index: 2;
+  position: absolute;
+  position: fixed;
+  backdrop-filter: blur(6px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.26);
+  border-radius: 12px;
 }
