@@ -4,7 +4,7 @@ function Signin() {
   const nav = useNavigate();
     return (
       <div>
-        <button onClick={()=>{nav("/")}}>Back</button>
+        <button className='back' onClick={()=>{nav("/")}}>Back</button>
       <div className='bg'>
       <form class="form">
         <p class="form-title">Sign in to your account</p>
