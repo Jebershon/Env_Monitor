@@ -6,16 +6,18 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import Footer from "./Footer";
 import { Settings } from "@mui/icons-material";
+import { Navigate, useNavigate } from "react-router-dom";
 const Home = () => {
+const nav = useNavigate();
   return (
-    <div className="home-container">
+    <div className="home-container"  id="home">
       <div className="position">
       <div className="nav">
       <div className="contain">
-        <div className="Home"><HomeIcon/></div>
-        <div className="Account"><AccountBoxIcon/></div>
-        <div className="Data"><BarChartIcon/></div>
-        <div className="settings"><Settings/></div>
+        <div className="Home"><a href="#home"><button className="nav-btn"><HomeIcon/></button></a></div>
+        <div className="Account"><button className="nav-btn" onClick={()=>{nav('/Signup')}}><AccountBoxIcon/></button></div>
+        <div className="Data"><button className="nav-btn" onClick={()=>{nav('/Env_View')}}><BarChartIcon/></button></div>
+        <div className="settings"><button className="nav-btn" onClick={()=>{nav('/Settings')}}><Settings/></button></div>
       </div>
       </div>
       </div>

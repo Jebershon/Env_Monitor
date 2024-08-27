@@ -50,7 +50,7 @@ function Signup() {
         </button>
         <p class="signup-link">
           already have account?
-          <a href="">Sign in</a>
+          <a onClick={()=>{nav('/Signin')}} style={{cursor:"grab"}}>Sign in</a>
         </p>
       </form>
       </div>
