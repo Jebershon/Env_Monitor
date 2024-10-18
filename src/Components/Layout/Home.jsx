@@ -1,23 +1,54 @@
 import React from "react";
 import "./Home.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import logo from "../../Assests/ecobot.png";
 import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import Footer from "./Footer";
-import { Settings } from "@mui/icons-material";
-import { Navigate, useNavigate } from "react-router-dom";
+import { LoginOutlined, LogoutOutlined} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import {jwtDecode} from 'jwt-decode';
 const Home = () => {
 const nav = useNavigate();
+const [user, setUser] = useState({});
+const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+        setIsAuthenticated(true);
+        console.log(decoded);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+      }
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
   return (
+    <>
     <div className="home-container"  id="home">
       <div className="position">
       <div className="nav">
       <div className="contain">
-        <div className="Home"><a href="#home"><button className="nav-btn"><HomeIcon/></button></a></div>
-        <div className="Account"><button className="nav-btn" onClick={()=>{nav('/Signup')}}><AccountBoxIcon/></button></div>
+        <div className="Home"><button className="nav-btn" onClick={()=>{nav('/')}}><HomeIcon/></button></div>
+        {isAuthenticated && (
+          <>
+        <div className="Account"><button className="nav-btn" onClick={()=>{nav('/profile')}}><AccountBoxIcon/></button></div>
         <div className="Data"><button className="nav-btn" onClick={()=>{nav('/Env_View')}}><BarChartIcon/></button></div>
-        <div className="settings"><button className="nav-btn" onClick={()=>{nav('/Settings')}}><Settings/></button></div>
+        <div className="settings"><button className="nav-btn" onClick={()=>{localStorage.clear();setIsAuthenticated(false);window.location.reload();}}><LogoutOutlined/></button></div>
+        </>
+        )}
+        {!isAuthenticated && (
+        <div className="Data"><button className="nav-btn" onClick={()=>{nav('/Signin')}}><LoginOutlined/></button></div>
+        )}
       </div>
       </div>
       </div>
@@ -25,9 +56,9 @@ const nav = useNavigate();
         <img src={logo} alt="Project" className="hero-image" />
         <h1 className="project-title">
           Automated Environmental Surveillance and Monitoring System
+          <h1>Welcome, {user.name ? user.name : 'Guest'}!</h1>
         </h1>
       </div>
-
       <div className="card-container">
         <div className="card">
           <h2 className="card-title">Introduction</h2>
@@ -88,6 +119,7 @@ const nav = useNavigate();
         <Footer />
       </div>
     </div>
+    </>
   );
 };
 
