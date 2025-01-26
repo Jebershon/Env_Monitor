@@ -1,20 +1,32 @@
 import './Env_Data.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack,SearchSharp } from '@mui/icons-material';
 import Error from '../Functional_Layout/Error404';
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
-import { plants } from '../Functional_Layout/plantsData'; // Adjust the path accordingly
+import { plants } from '../Functional_Layout/plantsData.js'; // Adjust the path accordingly
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+
 function Env_Data() {
   const nav = useNavigate();
+  const [plant, setPlants] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [sensorData, setSensorData] = useState(null);
   const [filteredPlants, setFilteredPlants] = useState([]);
   const [message, setMessage] = useState('');
   const [to ,setTo] = useState("");
+
+// Use useEffect to retrieve data when the component mounts
+  useEffect(() => {
+    if (plants) {
+      setPlants([...plants]); 
+    }
+    else{
+      console.log("No plants found");
+    }
+  }, []);
 
   // Check authentication
   useEffect(() => {
@@ -52,16 +64,36 @@ function Env_Data() {
     }
   }, [isAuthenticated]);
 
+  // Parse range values Filtering plants
+  const parseRange = (range) => {
+    if (!range) return { min: 0, max: Infinity };
+        const [min, max] = range
+            .replace(/[^\d.\s-]/g, "") // Remove °C, %, etc.
+            .split("to")
+            .map((val) => parseFloat(val.trim()));
+        return { min: min || 0, max: max || Infinity };
+    };
+
   // Filter plants based on sensor data
   const filterPlants = (sensors) => {
-    const matchedPlants = plants.filter(plant => {
+    if (!plant || plant.length === 0) {
+      console.warn("No plant data available for filtering.");
+      setFilteredPlants([]);
+      return;
+    }
+
+    const matchedPlants = plant.filter(plant => {
+        const airTempValue = sensors?.airTemperature?.value ?? 0;
+        const soilMoistureValue = sensors?.soilMoisture?.value ?? 0;
+        const soilPhValue = sensors?.soilPh?.value ?? 0;
+
+        const airTemp = parseRange(plant["Air temperture"]);
+        const soilMoisture = parseRange(plant["Soil Moisture"]);
+        const soilPh = parseRange(plant["Soil Ph Level"]);
       return (
-        sensors.airTemperature.value >= plant.conditions.airTemperature.min &&
-        sensors.airTemperature.value <= plant.conditions.airTemperature.max &&
-        sensors.soilMoisture.value >= plant.conditions.soilMoisture.min &&
-        sensors.soilMoisture.value <= plant.conditions.soilMoisture.max &&
-        sensors.soilPh.value >= plant.conditions.soilPh.min &&
-        sensors.soilPh.value <= plant.conditions.soilPh.max
+        airTempValue >= airTemp.min && airTempValue <= airTemp.max &&
+        soilMoistureValue >= soilMoisture.min && soilMoistureValue <= soilMoisture.max &&
+        soilPhValue >= soilPh.min && soilPhValue <= soilPh.max
       );
     });
     setFilteredPlants(matchedPlants);
@@ -103,7 +135,7 @@ function Env_Data() {
                 <h2>Suitable Plants</h2>
                 <ul>
                   {filteredPlants.map((plant, index) => (
-                    <li key={index}>{plant.name}</li>
+                    <li key={index}>{plant["Plant Name"]}</li>
                   ))}
                 </ul>
               </div>
@@ -119,6 +151,39 @@ function Env_Data() {
                 cols={50}
               />
               <button onClick={handleSendSms} className='send-sms-btn'>Send SMS</button>
+            </div>
+          </div>
+          {/* ------------------------All Plants------------------------ */}
+          <div className='Plant-container'>
+          <h2>All Plants</h2>
+            <div className='search-container'>
+            <div className='search-icon'>
+            <SearchSharp/>
+            </div>
+            <div className='search-text'>
+            <input
+              type="text"
+              placeholder={"Search"}
+              className='search-box'
+              onChange={(e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = plants.filter((plant) =>
+                  plant["Plant Name"].toLowerCase().includes(searchTerm)
+                );
+                setPlants(filtered);
+              }}
+            />
+            </div>
+            </div>
+            <div className='all-plants-container'>
+              <div>
+                {plant?.map((plant, index) => (
+                  <div key={index} className='Plant-container'>
+                    {plant["Plant Name"]}
+                    <button onClick={() => {console.log("Comparing...")}} className='compare-btn'>Compare Readings</button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>

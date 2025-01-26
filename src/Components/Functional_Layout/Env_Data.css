@@ -15,14 +15,20 @@ body {
     font-size: 18px;
     margin-bottom: 20px;
   }
-  
+
   .data-container {
     border: 1px solid #000;
     padding: 20px;
+    margin: 12px;
     border-radius: 5px;
     background-color: #f9f9f9; /* Light gray background for the container */
   }
-  
+
+  .plant-info {
+    height: 200px;
+    overflow-y: scroll;
+  }
+
   .sensor-info,
   .plant-info {
     margin-bottom: 20px;
@@ -66,4 +72,80 @@ body {
   .send-sms-btn:hover {
     background-color: #444;
   }
+  /* Other Container */
   
+  .Plant-container{
+    border: 1px solid #000;
+    padding: 20px;
+    margin: 12px;
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Light gray background for the container */
+  }
+  .all-plants-container{
+    height: 300px;
+    overflow-y: scroll;
+    margin: 12px;
+  }
+  .search-container{
+    display: flex;
+    flex-direction: row;
+    border-radius: 5px;
+    border: #000 solid 3px;
+  }
+  .search-icon{
+    padding: 5px;
+    margin: 5px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .search-box{
+    width: 100%;
+    border-radius: 5px;
+    height: 25px;
+    font-size: larger;
+    margin: 5px;
+    border: none;
+  }
+  .search-box:focus{
+    outline: none;
+  }
+  .compare-btn{
+    margin: 5px;
+    margin-left: 12px;
+    padding: 10px 20px;
+    border: black solid 3px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .compare-btn:hover {
+    background-color: #444;
+    color: white;
+  }
+  .search-text{
+    display: flex;
+    align-items: center;
+  }
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

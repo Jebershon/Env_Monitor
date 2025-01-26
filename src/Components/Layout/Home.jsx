@@ -22,7 +22,6 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
         const decoded = jwtDecode(token);
         setUser(decoded);
         setIsAuthenticated(true);
-        console.log(decoded);
       } catch (error) {
         console.error("Invalid token:", error);
         localStorage.removeItem('token');

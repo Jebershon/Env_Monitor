@@ -1,4 +1,4 @@
-const plants = [
+export const plants = [
     {
         "Plant Name": "Tomatoes",
         "Air temperture": " 20°C to 30°C",
