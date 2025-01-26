@@ -2,7 +2,7 @@ import React from "react";
 import "./Home.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import logo from "../../Assests/ecobot.png";
+import logo from "../../Asserts/ecobot.png";
 import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import BarChartIcon from '@mui/icons-material/BarChart';
