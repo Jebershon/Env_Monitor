@@ -120,7 +120,6 @@ function Env_Data() {
           <button onClick={() => { nav('/') }} className='back-btn'>
             <span className='back-arrow'><ArrowBack /></span>Back
           </button>
-          <ToastContainer />
           <div className='data-container'>
             {sensorData && (
               <div className='sensor-info'>

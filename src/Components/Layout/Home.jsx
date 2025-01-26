@@ -34,6 +34,7 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
     <>
     <div className="home-container"  id="home">
+    <ToastContainer />
       <div className="position">
       <div className="nav">
       <div className="contain">
