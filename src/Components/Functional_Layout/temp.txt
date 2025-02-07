@@ -1,13 +1,12 @@
 import './Env_Data.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack, SearchSharp } from '@mui/icons-material';
+import { ArrowBack,SearchSharp } from '@mui/icons-material';
 import Error from '../Functional_Layout/Error404';
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import { plants } from '../Functional_Layout/plantsData.js'; // Adjust the path accordingly
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loader from '../Functional_Layout/loader';
 import axios from 'axios';
 
 function Env_Data() {
@@ -17,14 +16,15 @@ function Env_Data() {
   const [token, setToken] = useState({});
   const [sensorData, setSensorData] = useState(null);
   const [filteredPlants, setFilteredPlants] = useState([]);
+  const [sendSmsTrigger, setSendSmsTrigger] = useState(false);
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  // Use useEffect to retrieve data when the component mounts
+// Use useEffect to retrieve data when the component mounts
   useEffect(() => {
     if (plants) {
-      setPlants([...plants]);
-    } else {
+      setPlants([...plants]); 
+    }
+    else{
       console.log("No plants found");
     }
   }, []);
@@ -68,23 +68,12 @@ function Env_Data() {
   // Parse range values Filtering plants
   const parseRange = (range) => {
     if (!range) return { min: 0, max: Infinity };
-    const [min, max] = range
-      .replace(/[^\d.\s-]/g, "") // Remove °C, %, etc.
-      .split("to")
-      .map((val) => parseFloat(val.trim()));
-    return { min: min || 0, max: max || Infinity };
-  };
-
-  // Calculate difference and assign class
-  const calculateDifferenceClass = (sensorValue, plantRange) => {
-    const { min, max } = parseRange(plantRange);
-    const difference = Math.abs(sensorValue - ((min + max) / 2));
-    if (difference === 0) return 'very-good-growth';
-    if (difference <= 1) return 'good-growth';
-    if (difference <= 2) return 'moderate-growth';
-    if (difference <= 3) return 'hard-to-survive';
-    return 'not-suitable';
-  };
+        const [min, max] = range
+            .replace(/[^\d.\s-]/g, "") // Remove °C, %, etc.
+            .split("to")
+            .map((val) => parseFloat(val.trim()));
+        return { min: min || 0, max: max || Infinity };
+    };
 
   // Filter plants based on sensor data
   const filterPlants = (sensors) => {
@@ -95,13 +84,13 @@ function Env_Data() {
     }
 
     const matchedPlants = plant.filter(plant => {
-      const airTempValue = sensors?.airTemperature?.value ?? 0;
-      const soilMoistureValue = sensors?.soilMoisture?.value ?? 0;
-      const soilPhValue = sensors?.soilPh?.value ?? 0;
+        const airTempValue = sensors?.airTemperature?.value ?? 0;
+        const soilMoistureValue = sensors?.soilMoisture?.value ?? 0;
+        const soilPhValue = sensors?.soilPh?.value ?? 0;
 
-      const airTemp = parseRange(plant["Air temperture"]);
-      const soilMoisture = parseRange(plant["Soil Moisture"]);
-      const soilPh = parseRange(plant["Soil Ph Level"]);
+        const airTemp = parseRange(plant["Air temperture"]);
+        const soilMoisture = parseRange(plant["Soil Moisture"]);
+        const soilPh = parseRange(plant["Soil Ph Level"]);
       return (
         airTempValue >= airTemp.min && airTempValue <= airTemp.max &&
         soilMoistureValue >= soilMoisture.min && soilMoistureValue <= soilMoisture.max &&
@@ -111,44 +100,26 @@ function Env_Data() {
     setFilteredPlants(matchedPlants);
   };
 
-
-  // Send SMS
+  useEffect(() => {
     const handleSendSms = async () => {
-      if(token.phone && message && sensorData) {
-      setLoading(true);
-      const template = 
-      `
-      Sensor Data:
-      Air temperture: ${sensorData?.airTemperature.value} ${sensorData?.airTemperature.unit}
-      Soil Moisture: ${sensorData?.soilMoisture.value} ${sensorData?.soilMoisture.unit}
-      Soil Ph Level: ${sensorData?.soilPh.value} ${sensorData?.soilPh.unit}
-      `;
       try {
-        const response = await axios.post('http://localhost:3001/send-sms', { to: token.phone+"".split(" ").join(""), message:message+""+template});
+        const response = await axios.post('https://env-monitor-server.onrender.com/send-sms', { phone: token.phone, message });
         if (response.status === 200) {
           toast.success('SMS sent successfully!', { autoClose: 2000 });
-          window.location.reload();
         } else {
           toast.error('Failed to send SMS.', { autoClose: 2000 });
         }
-      } 
-      catch (error) {
+      } catch (error) {
         console.error('Error sending SMS:', error);
         toast.error('An error occurred while sending SMS.', { autoClose: 2000 });
       }
-      finally {
-        setLoading(false);
-      }
-    }
     };
 
-    if (loading) {
-      return (
-        <>
-        <div><Loader/></div>
-        </>
-      );
+    if (sendSmsTrigger) {
+      handleSendSms();
+      setSendSmsTrigger(false); // Reset the trigger
     }
+  }, [sendSmsTrigger,token,message]);
 
   return (
     <>
@@ -161,9 +132,9 @@ function Env_Data() {
             {sensorData && (
               <div className='sensor-info'>
                 <h2>Sensor Data</h2>
-                <p>Air Temperature: {sensorData?.airTemperature.value} {sensorData?.airTemperature.unit}</p>
-                <p>Soil Moisture: {sensorData?.soilMoisture.value} {sensorData?.soilMoisture.unit}</p>
-                <p>Soil pH: {sensorData?.soilPh.value} {sensorData?.soilPh.unit}</p>
+                <p>Air Temperature: {sensorData.airTemperature.value} {sensorData.airTemperature.unit}</p>
+                <p>Soil Moisture: {sensorData.soilMoisture.value} {sensorData.soilMoisture.unit}</p>
+                <p>Soil pH: {sensorData.soilPh.value} {sensorData.soilPh.unit}</p>
               </div>
             )}
             {filteredPlants.length > 0 ? (
@@ -171,7 +142,7 @@ function Env_Data() {
                 <h2>Suitable Plants</h2>
                 <ul>
                   {filteredPlants.map((plant, index) => (
-                    <li key={index}>{plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}</li>
+                    <li key={index}>{plant["Plant Name"]}</li>
                   ))}
                 </ul>
               </div>
@@ -186,44 +157,39 @@ function Env_Data() {
                 rows={4}
                 cols={50}
               />
-              <button onClick={() => handleSendSms()} className='send-sms-btn'>Send SMS</button>
+              <button onClick={() => setSendSmsTrigger(true)} className='send-sms-btn'>Send SMS</button>
             </div>
           </div>
           {/* ------------------------All Plants------------------------ */}
           <div className='Plant-container'>
-            <h2>All Plants</h2>
+          <h2>All Plants</h2>
             <div className='search-container'>
-              <div className='search-icon'>
-                <SearchSharp />
-              </div>
-              <div className='search-text'>
-                <input
-                  type="text"
-                  placeholder={"Search"}
-                  className='search-box'
-                  onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const filtered = plants.filter((plant) =>
-                      plant["Plant Name"].toLowerCase().includes(searchTerm)
-                    );
-                    setPlants(filtered);
-                  }}
-                />
-              </div>
+            <div className='search-icon'>
+            <SearchSharp/>
+            </div>
+            <div className='search-text'>
+            <input
+              type="text"
+              placeholder={"Search"}
+              className='search-box'
+              onChange={(e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = plants.filter((plant) =>
+                  plant["Plant Name"].toLowerCase().includes(searchTerm)
+                );
+                setPlants(filtered);
+              }}
+            />
+            </div>
             </div>
             <div className='all-plants-container'>
               <div>
-                {plant?.map((plant, index) => {
-                  const airTempClass = calculateDifferenceClass(sensorData?.airTemperature?.value, plant["Air temperture"]);
-                  const soilMoistureClass = calculateDifferenceClass(sensorData?.soilMoisture?.value, plant["Soil Moisture"]);
-                  const soilPhClass = calculateDifferenceClass(sensorData?.soilPh?.value, plant["Soil Ph Level"]);
-                  return (
-                    <div key={index} className={`Plant-container ${airTempClass} ${soilMoistureClass} ${soilPhClass}`}>
-                      {plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}
-                      <button onClick={() => { console.log("Comparing...") }} className='compare-btn'>Compare Readings</button>
-                    </div>
-                  );
-                })}
+                {plant?.map((plant, index) => (
+                  <div key={index} className='Plant-container'>
+                    {plant["Plant Name"]}
+                    <button onClick={() => {console.log("Comparing...")}} className='compare-btn'>Compare Readings</button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

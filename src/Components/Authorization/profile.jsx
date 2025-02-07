@@ -9,13 +9,14 @@ import Loader from '../Functional_Layout/loader';
 function Profile() {
   const nav = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState({});
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
+    const local = localStorage.getItem('token');
+    if (local) {
       try {
-        const decoded = jwtDecode(token);
+        const decoded = jwtDecode(local);
         setIsAuthenticated(true);
-        console.log(decoded);
+        setToken(decoded);
       } catch (error) {
         console.error("Invalid token:", error);
         localStorage.removeItem('token');
@@ -25,6 +26,7 @@ function Profile() {
       setIsAuthenticated(false);
     }
   }, []);
+
   const [profile, setProfile] = useState({
     name: '',
     email: '',
@@ -34,24 +36,26 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    axios.get('https://env-monitor-server.onrender.com/users/66fa8940d69aceda7bffd3fd')
+useEffect(() => {
+  if (token.id) {
+    axios.get(`https://env-monitor-server.onrender.com/users/${token.id}`)
       .then(response => {
         const userData = response.data;
         setProfile({
           name: userData.name || '',
           email: userData.email || '',
           phone: userData.phone || '',
-          password: userData.password ||'********'
+          password: userData.password || '********'
         });
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
+        console.error('Error fetching profile information:', err);
         setError('Failed to load profile information');
         setLoading(false);
       });
-  }, []);
+  }
+}, [token]);
 
   if (loading) {
     return (
@@ -62,7 +66,11 @@ function Profile() {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>
+      <div>
+      <button onClick={()=>{nav('/')}} className='back-btn'><span className='back-arrow'><ArrowBack></ArrowBack></span>Back</button>
+      </div>
+      {error}</div>;
   }
 
   return (

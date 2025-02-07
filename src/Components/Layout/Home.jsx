@@ -1,6 +1,6 @@
 import React from "react";
 import "./Home.css";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logo from "../../Asserts/ecobot.png";
 import HomeIcon from '@mui/icons-material/Home';
@@ -54,10 +54,10 @@ const [isAuthenticated, setIsAuthenticated] = useState(false);
       </div>
       <div className="hero-section">
         <img src={logo} alt="Project" className="hero-image" />
-        <h1 className="project-title">
+        <div className="project-title">
           Automated Environmental Surveillance and Monitoring System
           <h1>Welcome, {user.name ? user.name : 'Guest'}!</h1>
-        </h1>
+        </div>
       </div>
       <div className="card-container">
         <div className="card">

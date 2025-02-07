@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signin.css';
-import { ArrowBack,VisibilityOffSharp, VisibilitySharp } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -34,7 +34,7 @@ function Signin() {
     if (!validateForm()) {
       setTimeout(() => {
         window.location.reload();
-        }, 2500);
+        }, 100);
       return;
     }
 

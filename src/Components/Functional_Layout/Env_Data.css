@@ -149,3 +149,23 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .very-good-growth {
+    border-left: 5px solid green;
+  }
+  
+  .good-growth {
+    border-left: 5px solid yellow;
+  }
+  
+  .moderate-growth {
+    border-left: 5px solid #FFBF00;
+  }
+  
+  .hard-to-survive {
+    border-left: 5px solid orange;
+  }
+  
+  .not-suitable {
+    border-left: 5px solid red;
+  }
