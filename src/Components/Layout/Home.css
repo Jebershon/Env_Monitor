@@ -3,6 +3,7 @@
   padding: 0 20px;
   bottom: 0;
   position: relative;
+  justify-content: center;
   /* Adds padding to the sides of the home container */
 }
 .hero-section {
@@ -14,8 +15,9 @@
 
 .hero-image {
   width: 100%; /* Image takes the full width */
-  height: 300px; /* Keeps the height proportional */
+  height: 500px; /* Keeps the height proportional */
   object-fit: cover; /* Ensures the image covers the area without distortion */
+  border-radius: 5px;
 }
 
 .project-title {
@@ -23,6 +25,28 @@
   text-align: center;
   margin-top: 10px;
   color: #00796b;
+}
+
+@media screen and (max-width: 768px) {
+  .project-title {
+    font-size: 1em; /* Reduces the font size on smaller screens */
+  }
+  .hero-image {
+    width: 100%; /* Image takes the full width */
+    height: 100%; /* Keeps the height proportional */
+    object-fit: fill;
+  }
+  .card {
+    padding: 5px !important;
+    margin: 2px !important;
+    grid: 0%;
+  }
+  .card-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; 
+    flex-wrap: wrap;
+  }
 }
 
 .card-container {
@@ -37,6 +61,7 @@
   flex: 1; /* Allows cards to expand evenly */
   min-width: 250px; /* Ensures cards have a minimum width */
   margin: 10px; /* Adds margin around each card */
+  text-align: center;
   padding: 20px; /* Adds padding inside each card */
   border: 1px solid #ddd; /* Adds a light border around cards */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a shadow to cards */
@@ -47,16 +72,6 @@
 .card:hover {
   transform: translateY(-10px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-.card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 100%;
-  max-width: 350px;
-  text-align: center;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .card-title {
