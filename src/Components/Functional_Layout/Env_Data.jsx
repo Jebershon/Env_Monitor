@@ -19,6 +19,7 @@ function Env_Data() {
   const [filteredPlants, setFilteredPlants] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   // Use useEffect to retrieve data when the component mounts
   useEffect(() => {
@@ -180,6 +181,10 @@ function Env_Data() {
     );
   }
 
+  const toggleAccordion = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
   return (
     <>
       {isAuthenticated ? (
@@ -251,15 +256,63 @@ function Env_Data() {
               </div>
             </div>
             <div className='all-plants-container'>
-              <div>
+              <div className="accordion">
                 {plant?.map((plant, index) => {
                   const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value, sensorData?.soilMoisture?.value, sensorData?.airTemperature?.value, plant["Soil Ph Level"], plant["Soil Moisture"], plant["Air temperture"]);
 
-                  return (
-                    <div key={index} className={`border ${plantClass}`}>
+                    return (
+                    <div key={index} className={`border ${plantClass} accordion-item ${activeIndex === index ? "active" : ""}`}>
+                      <button className="accordion-header" onClick={() => toggleAccordion(index)}>
                       {plant["Plant Name"]}
+                      </button>
+                      <div className="accordion-content" style={{ maxHeight: activeIndex === index ? "200px" : "0" }}>
+                      <table>
+                        <tbody>
+                        <tr>
+                          <td>Air Temperature:</td>
+                          <td>{plant["Air temperture"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Soil Moisture:</td>
+                          <td>{plant["Soil Moisture"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Soil Ph Level:</td>
+                          <td>{plant["Soil Ph Level"]}</td>
+                        </tr>
+                        <tr>
+                          <td>N.P.K:</td>
+                          <td>{plant["N.P.K"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Season:</td>
+                          <td>{plant["Season"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Growth Period:</td>
+                          <td>{plant["Growth Period"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Land Space:</td>
+                          <td>{plant["Land Space"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Investment:</td>
+                          <td>{plant["Inversment"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Profit:</td>
+                          <td>{plant["Profit"]}</td>
+                        </tr>
+                        <tr>
+                          <td>Soil type:</td>
+                          <td>{plant["Soil type"]}</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                      </div>
                     </div>
-                  );
+                    );
                 })}
               </div>
             </div>
