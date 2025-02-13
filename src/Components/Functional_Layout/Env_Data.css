@@ -169,3 +169,61 @@ body {
   .not-suitable {
     border-left: 5px solid red;
   }
+
+  .badge-container{
+     display: flex;
+     flex-direction: row;
+  }
+  .heading{
+    align-content: center;
+  }
+  .very-good{
+    align-content: center;
+    border: 1px solid transparent;
+    background-color: rgba(172, 255, 47, 0.542);
+    color: green;
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+  }
+  .good{
+    align-content: center;
+    border: 1px solid transparent;
+    background-color: rgba(238, 255, 47, 0.542);
+    color: rgb(129, 129, 2);
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+  }
+  .moderate{
+    align-content: center;
+    border: 1px solid transparent;
+    background-color: rgba(255, 172, 71, 0.817);
+    color: rgb(130, 85, 3);
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+  }
+  .hard{
+    align-content: center;
+    border: 1px solid transparent;
+    background-color: rgba(255, 89, 0, 0.816);
+    color: brown;
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+  }
+  .not{
+    align-content: center;
+    border: 1px solid transparent;
+    background-color: rgba(255, 47, 47, 0.794);
+    color: rgb(101, 0, 0);
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+  }

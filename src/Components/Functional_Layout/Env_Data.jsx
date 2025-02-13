@@ -68,40 +68,56 @@ function Env_Data() {
   // Parse range values Filtering plants
   const parseRange = (range) => {
     if (!range) return { min: 0, max: Infinity };
-    const [min, max] = range
-      .replace(/[^\d.\s-]/g, "") // Remove °C, %, etc.
-      .split("to")
-      .map((val) => parseFloat(val.trim()));
-    return { min: min || 0, max: max || Infinity };
+    const cleanedRange = range.replace(/[^\d.\s-]/g, "");
+    let parts = cleanedRange.trim().split(" ");
+    let min = parseInt(parts[0], 10);
+    let max = parseInt(parts[2], 10);
+    return { min: isNaN(min) ? 0 : min, max: isNaN(max) ? Infinity : max };
   };
 
   // Calculate difference and assign class
-  const calculateDifferenceClass = (sensorValue, plantRange) => {
-    const { min, max } = parseRange(plantRange);
-    const difference = Math.abs(sensorValue - ((min + max) / 2));
-    if (difference === 0) return 'very-good-growth';
-    if (difference <= 1) return 'good-growth';
-    if (difference <= 2) return 'moderate-growth';
-    if (difference <= 3) return 'hard-to-survive';
+  const calculateDifferenceClassOverall = (soilPh, soilMoisture, airTemperature, plantPh, plantMoisture, plantAir) => {
+    // console.log(`Data types - soilPh: ${typeof soilPh}, soilMoisture: ${typeof soilMoisture}, airTemperature: ${typeof airTemperature}, plantPh: ${typeof plantPh}, plantMoisture: ${typeof plantMoisture}, plantAir: ${typeof plantAir}`);
+
+    const { min: phmin, max: phmax } = parseRange(plantPh);
+    const { min: moistmin, max: moistmax } = parseRange(plantMoisture);
+    const { min: Airmin, max: Airmax } = parseRange(plantAir);
+    
+    // console.log(`Parsed Values - phmin: ${phmin}, phmax: ${phmax}, moistmin: ${moistmin}, moistmax: ${moistmax}, Airmin: ${Airmin}, Airmax: ${Airmax}`);
+
+    const differencePh = Math.round(soilPh - ((phmin + phmax) / 2));
+    const differenceMoisture = Math.round(soilMoisture - ((moistmin + moistmax) / 2));
+    const differenceAir = Math.round(airTemperature - ((Airmin + Airmax) / 2));
+
+    // console.log("Difference: " + differencePh + " | " + differenceMoisture + " | " + differenceAir);
+
+    if (differencePh === 0 && differenceMoisture === 0 && differenceAir === 0) return 'very-good-growth';
+    if (differencePh <= 2 && differenceMoisture <= 2 && differenceAir <= 2) return 'good-growth';
+    if (differencePh <= 4 && differenceMoisture <= 4 && differenceAir <= 4) return 'moderate-growth';
+    if (differencePh <= 5 && differenceMoisture <= 5 && differenceAir <= 5) return 'hard-to-survive';
     return 'not-suitable';
   };
 
   // Filter plants based on sensor data
   const filterPlants = (sensors) => {
+    setLoading(true);
     if (!plant || plant.length === 0) {
       console.warn("No plant data available for filtering.");
       setFilteredPlants([]);
+      setLoading(false);
       return;
     }
-
     const matchedPlants = plant.filter(plant => {
-      const airTempValue = sensors?.airTemperature?.value ?? 0;
-      const soilMoistureValue = sensors?.soilMoisture?.value ?? 0;
-      const soilPhValue = sensors?.soilPh?.value ?? 0;
-
+      const airTempValue = parseInt(sensors?.airTemperature?.value ?? 0);
+      const soilMoistureValue = parseInt(sensors?.soilMoisture?.value ?? 0);
+      const soilPhValue = parseInt(sensors?.soilPh?.value ?? 0);
       const airTemp = parseRange(plant["Air temperture"]);
       const soilMoisture = parseRange(plant["Soil Moisture"]);
       const soilPh = parseRange(plant["Soil Ph Level"]);
+      // console.log("airTempValue"+airTempValue+plant["Plant Name"]+""+airTemp.min+" "+airTemp.max);
+      // console.log("soilMoistureValue"+soilMoistureValue+soilMoisture.min+" "+soilMoisture.max);
+      // console.log("soilPhValue"+soilPhValue+soilPh.min+" "+soilPh.max);
+
       return (
         airTempValue >= airTemp.min && airTempValue <= airTemp.max &&
         soilMoistureValue >= soilMoisture.min && soilMoistureValue <= soilMoisture.max &&
@@ -109,8 +125,8 @@ function Env_Data() {
       );
     });
     setFilteredPlants(matchedPlants);
+    setLoading(false);
   };
-
 
   // Send SMS
     const handleSendSms = async () => {
@@ -141,6 +157,11 @@ function Env_Data() {
       }
     }
     };
+    if (!sensorData) {
+      return (
+        <div><Loader /></div>
+      );
+    }
 
     if (loading) {
       return (
@@ -191,7 +212,14 @@ function Env_Data() {
           </div>
           {/* ------------------------All Plants------------------------ */}
           <div className='Plant-container'>
-            <h2>All Plants</h2>
+            <div className='badge-container'>
+              <div className='heading'><h2>All Plants</h2></div>
+              <div className='very-good'>very-good</div>
+              <div className='good'>good</div>
+              <div className='moderate'>moderate</div>
+              <div className='hard'>hard</div>
+              <div className='not'>not-suitable</div>
+            </div>
             <div className='search-container'>
               <div className='search-icon'>
                 <SearchSharp />
@@ -214,11 +242,10 @@ function Env_Data() {
             <div className='all-plants-container'>
               <div>
                 {plant?.map((plant, index) => {
-                  const airTempClass = calculateDifferenceClass(sensorData?.airTemperature?.value, plant["Air temperture"]);
-                  const soilMoistureClass = calculateDifferenceClass(sensorData?.soilMoisture?.value, plant["Soil Moisture"]);
-                  const soilPhClass = calculateDifferenceClass(sensorData?.soilPh?.value, plant["Soil Ph Level"]);
+                  const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value,sensorData?.soilMoisture?.value,sensorData?.airTemperature?.value,plant["Soil Ph Level"],plant["Soil Moisture"],plant["Air temperture"]);
+
                   return (
-                    <div key={index} className={`Plant-container ${airTempClass} ${soilMoistureClass} ${soilPhClass}`}>
+                    <div key={index} className={`Plant-container ${plantClass}`}>
                       {plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}
                       <button onClick={() => { console.log("Comparing...") }} className='compare-btn'>Compare Readings</button>
                     </div>
