@@ -1,6 +1,6 @@
 import './Env_Data.css';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack, SearchSharp } from '@mui/icons-material';
+import { ArrowBack, Delete, ExpandMore, SearchSharp } from '@mui/icons-material';
 import Error from '../Functional_Layout/Error404';
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
@@ -223,7 +223,10 @@ function Env_Data() {
                 rows={4}
                 cols={50}
               />
+              <div className='space-between'>
               <button onClick={() => handleSendSms()} className='send-sms-btn'>Send SMS</button>
+              <button className='search-icon' onClick={()=>{setMessage("")}}><Delete/></button>
+              </div>
             </div>
           </div>
           {/* ------------------------All Plants------------------------ */}
@@ -241,7 +244,7 @@ function Env_Data() {
                 <SearchSharp />
               </div>
               <div className='search-text'>
-                <input
+                <textarea
                   type="text"
                   placeholder={"Search"}
                   className='search-box'
@@ -263,7 +266,7 @@ function Env_Data() {
                     return (
                     <div key={index} className={`border ${plantClass} accordion-item ${activeIndex === index ? "active" : ""}`}>
                       <button className="accordion-header" onClick={() => toggleAccordion(index)}>
-                      {plant["Plant Name"]}
+                      <div className='title'>{plant["Plant Name"]}</div><div className='expand-title'><ExpandMore/></div>
                       </button>
                       <div className="accordion-content" style={{ maxHeight: activeIndex === index ? "200px" : "0" }}>
                       <table>

@@ -92,7 +92,7 @@ body {
   }
   .search-container{
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     border-radius: 5px;
     border: #ffffff solid 3px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -110,10 +110,10 @@ body {
   }
   .search-box{
     border-radius: 2px;
-    height: 30px;
-    width: 100%;
-    font-size: larger;
+    height: 15px;
+    font-size: medium;
     border: none;
+    margin: 5px;
   }
   .search-box:focus{
     outline: none;
@@ -135,6 +135,7 @@ body {
   .search-text{
     display: flex;
     align-items: center;
+    width: 100%;
   }
   /* Custom scrollbar styles */
   ::-webkit-scrollbar {
@@ -163,40 +164,40 @@ body {
     transform: scale(1.01);
   }
   .very-good-growth {
-    border-left: 10px solid rgb(0, 255, 0);
-    border-right: 10px solid rgb(0, 255, 0);
+    border-left: 5px solid rgb(0, 255, 0);
+    border-right: 5px solid rgb(0, 255, 0);
     border-radius: 5px;
     padding: 20px;
     margin: 12px;
     background-color: #f9f9f9;
   }
   .good-growth {
-    border-left: 10px solid yellow;
-    border-right: 10px solid yellow;
+    border-left: 5px solid yellow;
+    border-right: 5px solid yellow;
     border-radius: 5px;
     padding: 20px;
     margin: 12px;
     background-color: #f9f9f9;
   }
   .moderate-growth {
-    border-left: 10px solid #FFBF00;
-    border-right: 10px solid #FFBF00;
+    border-left: 5px solid #FFBF00;
+    border-right: 5px solid #FFBF00;
     border-radius: 5px;
     padding: 20px;
     margin: 12px;
     background-color: #f9f9f9;
   }
   .hard-to-survive {
-    border-left: 10px solid rgb(255, 94, 0);
-    border-right: 10px solid rgb(255, 94, 0);
+    border-left: 5px solid rgb(255, 94, 0);
+    border-right: 5px solid rgb(255, 94, 0);
     border-radius: 5px;
     padding: 20px;
     margin: 12px;
     background-color: #f9f9f9;
   }
   .not-suitable {
-    border-left: 10px solid rgb(255, 0, 0);
-    border-right: 10px solid rgb(255, 0, 0);
+    border-left: 5px solid rgb(255, 0, 0);
+    border-right: 5px solid rgb(255, 0, 0);
     border-radius: 5px;
     padding: 20px;
     margin: 12px;
@@ -262,14 +263,7 @@ body {
     padding: 5px;
     margin: 5px;
   }
-  /* ---------------------------------Accordion------------------------------------- */
-  .accordion {
-    width: 90%;
-    max-width: 600px;
-    margin: auto;
-    border-radius: 8px;
-  }
-  
+  /* ---------------------------------Accordion------------------------------------- */  
   .accordion-item {
     border-bottom: 1px solid #ddd;
     overflow: hidden;
@@ -277,21 +271,27 @@ body {
   
   .accordion-header {
     width: 100%;
-    padding: 15px;
-    background: #3498db;
-    color: white;
     text-align: left;
     font-size: 16px;
     border: none;
+    background-color: #F9F9F9;
     cursor: pointer;
     outline: none;
     transition: background 0.3s ease;
+    display: flex;
+    justify-content: space-between;
   }
-  
-  .accordion-header:hover {
-    background: #2980b9;
+  .expand-title {
+    transition: transform 0.3s ease;
+    align-content: center;
   }
-  
+
+  .accordion-item.active .expand-title {
+    transform: rotate(180deg);
+  }
+  .title{
+      align-content: center;
+  }
   .accordion-content {
     max-height: 0;
     overflow: hidden;
@@ -310,4 +310,7 @@ body {
     max-height: 200px;
     padding: 15px;
   }
-  
+  .space-between{
+    display: flex;
+    justify-content: space-between;
+  }
