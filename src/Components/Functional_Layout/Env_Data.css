@@ -262,3 +262,52 @@ body {
     padding: 5px;
     margin: 5px;
   }
+  /* ---------------------------------Accordion------------------------------------- */
+  .accordion {
+    width: 90%;
+    max-width: 600px;
+    margin: auto;
+    border-radius: 8px;
+  }
+  
+  .accordion-item {
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+  }
+  
+  .accordion-header {
+    width: 100%;
+    padding: 15px;
+    background: #3498db;
+    color: white;
+    text-align: left;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  
+  .accordion-header:hover {
+    background: #2980b9;
+  }
+  
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, padding 0.3s ease-in-out;
+    background: #f9f9f9;
+    padding: 0 15px;
+  }
+  
+  .accordion-content p {
+    margin: 15px 0;
+    font-size: 14px;
+  }
+  
+  /* Active state */
+  .accordion-item.active .accordion-content {
+    max-height: 200px;
+    padding: 15px;
+  }
+  

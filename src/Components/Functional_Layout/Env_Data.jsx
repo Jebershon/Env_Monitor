@@ -77,19 +77,13 @@ function Env_Data() {
 
   // Calculate difference and assign class
   const calculateDifferenceClassOverall = (soilPh, soilMoisture, airTemperature, plantPh, plantMoisture, plantAir) => {
-    // console.log(`Data types - soilPh: ${typeof soilPh}, soilMoisture: ${typeof soilMoisture}, airTemperature: ${typeof airTemperature}, plantPh: ${typeof plantPh}, plantMoisture: ${typeof plantMoisture}, plantAir: ${typeof plantAir}`);
-
     const { min: phmin, max: phmax } = parseRange(plantPh);
     const { min: moistmin, max: moistmax } = parseRange(plantMoisture);
     const { min: Airmin, max: Airmax } = parseRange(plantAir);
-    
-    // console.log(`Parsed Values - phmin: ${phmin}, phmax: ${phmax}, moistmin: ${moistmin}, moistmax: ${moistmax}, Airmin: ${Airmin}, Airmax: ${Airmax}`);
 
     const differencePh = Math.round(soilPh - ((phmin + phmax) / 2));
     const differenceMoisture = Math.round(soilMoisture - ((moistmin + moistmax) / 2));
     const differenceAir = Math.round(airTemperature - ((Airmin + Airmax) / 2));
-
-    // console.log("Difference: " + differencePh + " | " + differenceMoisture + " | " + differenceAir);
 
     if (differencePh === 0 && differenceMoisture === 0 && differenceAir === 0) return 'very-good-growth';
     if (differencePh <= 2 && differenceMoisture <= 2 && differenceAir <= 2) return 'good-growth';
@@ -114,9 +108,6 @@ function Env_Data() {
       const airTemp = parseRange(plant["Air temperture"]);
       const soilMoisture = parseRange(plant["Soil Moisture"]);
       const soilPh = parseRange(plant["Soil Ph Level"]);
-      // console.log("airTempValue"+airTempValue+plant["Plant Name"]+""+airTemp.min+" "+airTemp.max);
-      // console.log("soilMoistureValue"+soilMoistureValue+soilMoisture.min+" "+soilMoisture.max);
-      // console.log("soilPhValue"+soilPhValue+soilPh.min+" "+soilPh.max);
 
       return (
         airTempValue >= airTemp.min && airTempValue <= airTemp.max &&
@@ -129,25 +120,25 @@ function Env_Data() {
   };
 
   // Send SMS
-    const handleSendSms = async () => {
-      if(token.phone && message && sensorData) {
+  const handleSendSms = async () => {
+    if (token.phone && message && sensorData) {
       setLoading(true);
-      const template = 
-      `
+      const template =
+        `
       Sensor Data:
       Air temperture: ${sensorData?.airTemperature.value} ${sensorData?.airTemperature.unit}
       Soil Moisture: ${sensorData?.soilMoisture.value} ${sensorData?.soilMoisture.unit}
       Soil Ph Level: ${sensorData?.soilPh.value} ${sensorData?.soilPh.unit}
       `;
       try {
-        const response = await axios.post('https://env-monitor.vercel.app/send-sms', { to: token.phone+"".split(" ").join(""), message:message+""+template});
+        const response = await axios.post('https://env-monitor.vercel.app/send-sms', { to: token.phone + "".split(" ").join(""), message: message + "" + template });
         if (response.status === 200) {
           toast.success('SMS sent successfully!', { autoClose: 2000 });
           window.location.reload();
         } else {
           toast.error('Failed to send SMS.', { autoClose: 2000 });
         }
-      } 
+      }
       catch (error) {
         console.error('Error sending SMS:', error);
         toast.error('An error occurred while sending SMS.', { autoClose: 2000 });
@@ -156,20 +147,38 @@ function Env_Data() {
         setLoading(false);
       }
     }
-    };
-    if (!sensorData) {
-      return (
-        <div><Loader /></div>
-      );
-    }
+  };
 
-    if (loading) {
-      return (
-        <>
-        <div><Loader/></div>
-        </>
-      );
-    }
+  const handlePlantClick = (plant) => {
+    const plantDetails = `
+      Plant Name: ${plant["Plant Name"]}
+      Air Temperature: ${plant["Air temperture"]}
+      Soil Moisture: ${plant["Soil Moisture"]}
+      Soil Ph Level: ${plant["Soil Ph Level"]}
+      N.P.K: ${plant["N.P.K"]}
+      Season: ${plant["Season"]}
+      Growth Period: ${plant["Growth Period"]}
+      Land Space: ${plant["Land Space"]}
+      Investment: ${plant["Inversment"]}
+      Profit: ${plant["Profit"]}
+      Soil type: ${plant["Soil type"]}
+    `;
+    setMessage(plantDetails);
+  };
+
+  if (!sensorData) {
+    return (
+      <div><Loader /></div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <>
+        <div><Loader /></div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -192,7 +201,9 @@ function Env_Data() {
                 <h2>Suitable Plants</h2>
                 <ul>
                   {filteredPlants.map((plant, index) => (
-                    <li key={index}>{plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}</li>
+                    <li key={index} onClick={() => handlePlantClick(plant)}>
+                      {plant["Plant Name"]}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -212,8 +223,8 @@ function Env_Data() {
           </div>
           {/* ------------------------All Plants------------------------ */}
           <div className='Plant-container'>
-              <h2>All Plants</h2>
-              <div className='badge-container'>
+            <h2>All Plants</h2>
+            <div className='badge-container'>
               <div className='very-good'>very-good</div>
               <div className='good'>good</div>
               <div className='moderate'>moderate</div>
@@ -242,11 +253,11 @@ function Env_Data() {
             <div className='all-plants-container'>
               <div>
                 {plant?.map((plant, index) => {
-                  const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value,sensorData?.soilMoisture?.value,sensorData?.airTemperature?.value,plant["Soil Ph Level"],plant["Soil Moisture"],plant["Air temperture"]);
+                  const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value, sensorData?.soilMoisture?.value, sensorData?.airTemperature?.value, plant["Soil Ph Level"], plant["Soil Moisture"], plant["Air temperture"]);
 
                   return (
                     <div key={index} className={`border ${plantClass}`}>
-                      {plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}
+                      {plant["Plant Name"]}
                     </div>
                   );
                 })}
