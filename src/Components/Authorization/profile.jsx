@@ -137,6 +137,17 @@ useEffect(() => {
           </div>
         </form>
       </div>
+      <div class="label">
+        <section class="label-top">
+          <div class="label-top-text">PARENTAL</div>
+        </section>
+        <section class="label-middle">
+          <div class="label-middle-text">ADVISORY</div>
+        </section>
+        <section class="label-bottom">
+          <div class="label-bottom-text">EXPLICIT CONTENT</div>
+        </section>
+      </div>
     </div>
     </>
     )}

@@ -212,8 +212,8 @@ function Env_Data() {
           </div>
           {/* ------------------------All Plants------------------------ */}
           <div className='Plant-container'>
-            <div className='badge-container'>
-              <div className='heading'><h2>All Plants</h2></div>
+              <h2>All Plants</h2>
+              <div className='badge-container'>
               <div className='very-good'>very-good</div>
               <div className='good'>good</div>
               <div className='moderate'>moderate</div>
@@ -245,9 +245,8 @@ function Env_Data() {
                   const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value,sensorData?.soilMoisture?.value,sensorData?.airTemperature?.value,plant["Soil Ph Level"],plant["Soil Moisture"],plant["Air temperture"]);
 
                   return (
-                    <div key={index} className={`Plant-container ${plantClass}`}>
+                    <div key={index} className={`border ${plantClass}`}>
                       {plant["Plant Name"]} -> {plant["Air temperture"]} -> {plant["Soil Moisture"]} -> {plant["Soil Ph Level"]}
-                      <button onClick={() => { console.log("Comparing...") }} className='compare-btn'>Compare Readings</button>
                     </div>
                   );
                 })}

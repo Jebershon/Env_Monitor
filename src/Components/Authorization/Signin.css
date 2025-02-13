@@ -100,6 +100,7 @@
   padding: 15px;
   background-color: white;
   border: 2px solid black;
+  border-radius: 15px;
   color: black;
   width: max-content;
   display: flex;
@@ -125,3 +126,4 @@
   transform: translateX(-10px); /* Move the arrow forward by 10px */
 }
 
+/* ------------------------------------------------------------------------- */
