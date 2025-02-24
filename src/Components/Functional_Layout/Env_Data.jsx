@@ -132,7 +132,7 @@ function Env_Data() {
       Soil Ph Level: ${sensorData?.soilPh.value} ${sensorData?.soilPh.unit}
       `;
       try {
-        const response = await axios.post('https://env-monitor.vercel.app/send-sms', { to: token.phone + "".split(" ").join(""), message: message + "" + template });
+        const response = await axios.post('https://env-monitor-server.onrender.com/send-sms', { to: token.phone.replace(/\s+/g, '') + "".split(" ").join(""), message: message + "" + template });
         if (response.status === 200) {
           toast.success('SMS sent successfully!', { autoClose: 2000 });
           window.location.reload();
