@@ -54,7 +54,11 @@ function Env_Data() {
       const fetchSensorData = async () => {
         try {
           const response = await fetch(`https://env-monitor-server.onrender.com/sensors/670fb29c24640eb71ba9f641`);
-          const data = await response.json();
+            const data = await response.json();
+            // Convert sensor values to 12.3 format
+            data.sensors.airTemperature.value = (data.sensors.airTemperature.value / 10).toFixed(1);
+            data.sensors.soilMoisture.value = (data.sensors.soilMoisture.value / 10).toFixed(1);
+            data.sensors.humidity.value = (data.sensors.humidity.value / 10).toFixed(1);
           setSensorData(data.sensors);
           filterPlants(data.sensors);
         } catch (error) {
@@ -77,16 +81,22 @@ function Env_Data() {
   };
 
   // Calculate difference and assign class
-  const calculateDifferenceClassOverall = (soilPh, soilMoisture, airTemperature, plantPh, plantMoisture, plantAir) => {
+  const calculateDifferenceClassOverall = (soilPh, soilMoisture, airTemperature, plantPh, plantMoisture, plantAir,plantName) => {
+    // Check if all sensor values are zero
+    const zeroCount = [soilPh, soilMoisture, airTemperature].filter(value => value === 0).length;
+    if (zeroCount >= 2) {
+      return 'not-suitable';
+    }
     const { min: phmin, max: phmax } = parseRange(plantPh);
     const { min: moistmin, max: moistmax } = parseRange(plantMoisture);
     const { min: Airmin, max: Airmax } = parseRange(plantAir);
-
+  
     const differencePh = Math.round(soilPh - ((phmin + phmax) / 2));
     const differenceMoisture = Math.round(soilMoisture - ((moistmin + moistmax) / 2));
     const differenceAir = Math.round(airTemperature - ((Airmin + Airmax) / 2));
-
-    if (differencePh === 0 && differenceMoisture === 0 && differenceAir === 0) return 'very-good-growth';
+    
+    if (filteredPlants.some(plant => plant["Plant Name"] === plantName)) return 'very-good-growth';
+    if (differencePh <= 1 && differenceMoisture <= 1 && differenceAir <= 1) return 'very-good-growth';
     if (differencePh <= 2 && differenceMoisture <= 2 && differenceAir <= 2) return 'good-growth';
     if (differencePh <= 4 && differenceMoisture <= 4 && differenceAir <= 4) return 'moderate-growth';
     if (differencePh <= 5 && differenceMoisture <= 5 && differenceAir <= 5) return 'hard-to-survive';
@@ -199,6 +209,10 @@ function Env_Data() {
                 <p>Air Temperature: {sensorData?.airTemperature.value} {sensorData?.airTemperature.unit}</p>
                 <p>Soil Moisture: {sensorData?.soilMoisture.value} {sensorData?.soilMoisture.unit}</p>
                 <p>Soil pH: {sensorData?.soilPh.value} {sensorData?.soilPh.unit}</p>
+                <p>Humidity: {sensorData?.humidity.value} {sensorData?.humidity.unit}</p>
+                <p>Nitrogen: {sensorData?.npk.nitrogen.value} {sensorData?.npk.nitrogen.unit}</p>
+                <p>Phosphorus: {sensorData?.npk.phosphorus.value} {sensorData?.npk.phosphorus.unit}</p>
+                <p>Potassium: {sensorData?.npk.potassium.value} {sensorData?.npk.potassium.unit}</p>
               </div>
             )}
             {filteredPlants.length > 0 ? (
@@ -261,7 +275,7 @@ function Env_Data() {
             <div className='all-plants-container'>
               <div className="accordion">
                 {plant?.map((plant, index) => {
-                  const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value, sensorData?.soilMoisture?.value, sensorData?.airTemperature?.value, plant["Soil Ph Level"], plant["Soil Moisture"], plant["Air temperture"]);
+                  const plantClass = calculateDifferenceClassOverall(sensorData?.soilPh?.value, sensorData?.soilMoisture?.value, sensorData?.airTemperature?.value, plant["Soil Ph Level"], plant["Soil Moisture"], plant["Air temperture"],plant["Plant Name"]);
 
                     return (
                     <div key={index} className={`border ${plantClass} accordion-item ${activeIndex === index ? "active" : ""}`}>
